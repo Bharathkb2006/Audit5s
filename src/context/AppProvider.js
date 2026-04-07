@@ -15,6 +15,8 @@ import { uploadPublicFile } from '../lib/firebase/storageUpload';
 
 const AppContext = createContext(null);
 
+const ADMIN_SESSION_KEY = 'bi_admin_authed_v1';
+
 let zoneChannel = null;
 try {
   if (typeof BroadcastChannel !== 'undefined') zoneChannel = new BroadcastChannel('bi_5s_zone_updates');
@@ -29,7 +31,13 @@ export function AppProvider({ children }) {
 
   const [fppData, setFppDataState] = useState(() => defaultFppContent());
 
-  const [adminAuthed, setAdminAuthed] = useState(() => false);
+  const [adminAuthed, setAdminAuthed] = useState(() => {
+    try {
+      return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   useFirestoreSubscriptions(setSiteContentState, setZonesDataState, setFppDataState);
 
@@ -82,6 +90,11 @@ export function AppProvider({ children }) {
     const user = String(username || '').trim();
     if (user === 'admin' && String(password || '') === 'admin123') {
       setAdminAuthed(true);
+      try {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+      } catch {
+        /* ignore */
+      }
       return true;
     }
     return false;
@@ -89,6 +102,11 @@ export function AppProvider({ children }) {
 
   const logoutAdmin = useCallback(async () => {
     setAdminAuthed(false);
+    try {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const clearAllMediaStorage = useCallback(async () => {
@@ -121,7 +139,6 @@ export function AppProvider({ children }) {
       putBiMedia,
       notifyZoneUpdated,
       clearAllMediaStorage,
-      firebaseAuthEnabled: false,
     }),
     [
       siteContent,

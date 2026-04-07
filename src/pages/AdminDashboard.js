@@ -6,6 +6,7 @@ import { uploadPublicFile } from '../lib/firebase/storageUpload';
 import AdminZonePanel from '../admin/AdminZonePanel';
 
 const MEDIA_KEYS = [
+  ['logoFile', 'logoImage', 'logoImageStored'],
   ['about5sVideoFile', 'about5sVideo', 'about5sVideoStored'],
   ['s1VideoFile', 's1Video', 's1VideoStored'],
   ['s2VideoFile', 's2Video', 's2VideoStored'],
@@ -286,6 +287,7 @@ export default function AdminDashboard() {
           <p className="admin-note">Choose media files (1920×1080 recommended). Videos play autoplay+loop on the pages.</p>
           <div className="admin-form admin-media-grid">
             {[
+              ['logoFile', 'Site logo (image)'],
               ['about5sVideoFile', 'About 5S video'],
               ['s1VideoFile', '1S video'],
               ['s1ImageFile', '1S image'],

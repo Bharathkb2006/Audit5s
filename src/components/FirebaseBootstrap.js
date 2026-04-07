@@ -15,12 +15,7 @@ export default function FirebaseBootstrap({ kind }) {
             keys from the Firebase console as <code>REACT_APP_FIREBASE_*</code> variables. On Vercel, add the same names
             under Project → Settings → Environment Variables, then redeploy.
           </p>
-        ) : (
-          <p>
-            Set <code>REACT_APP_FIREBASE_USE_AUTH=true</code> and enable Email/Password in Firebase Authentication so
-            admins can sign in.
-          </p>
-        )}
+        ) : null}
       </div>
     </main>
   );

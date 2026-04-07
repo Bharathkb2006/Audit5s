@@ -2,6 +2,7 @@
  * Maps IndexedDB / upload keys to siteContent.assets fields (URL + clear *Stored).
  */
 export const SITE_MEDIA_KEY_MAP = {
+  logoImage: { urlField: 'logoImage', storedField: 'logoImageStored' },
   about5sVideo: { urlField: 'about5sVideo', storedField: 'about5sVideoStored' },
   s1Video: { urlField: 's1Video', storedField: 's1VideoStored' },
   s2Video: { urlField: 's2Video', storedField: 's2VideoStored' },
