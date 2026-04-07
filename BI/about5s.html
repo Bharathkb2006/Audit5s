@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About 5S</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="logo">
+      <img id="logoImage" src="brakes india pagr.png" alt="Brakes India Logo" class="site-logo">
+    </div>
+    <a href="admin-login.html" class="profile-icon profile-link" aria-label="Admin Login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+      </svg>
+    </a>
+  </header>
+
+  <!-- Slide-out menu -->
+  <nav class="side-menu" id="sideMenu" aria-hidden="true">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-panel">
+      <div class="menu-panel-scroll">
+        <ul class="menu-list">
+          <li><a href="index.html" class="menu-link active">Home</a></li>
+          <li class="menu-parent">
+            <button type="button" class="menu-link menu-parent-toggle" aria-expanded="false">
+              &gt; 5S Gallery
+            </button>
+            <ul class="submenu" hidden>
+              <li><a href="About5s.html" class="menu-link submenu-link">About 5S</a></li>
+              <li><a href="5sornogram.html" class="menu-link submenu-link">5S Ornogram</a></li>
+              <li><a href="layouts.html" class="menu-link submenu-link">Layouts</a></li>
+              <li><a href="fpp.html" class="menu-link submenu-link">FPP</a></li>
+              <li class="menu-parent">
+                <button type="button" class="menu-link menu-parent-toggle" aria-expanded="false">
+                  &gt; 5S Plan
+                </button>
+                <ul class="submenu" hidden>
+                  <li><a href="summary.html" class="menu-link submenu-link">Summary</a></li>
+                  <li><a href="5szones.html" class="menu-link submenu-link">5s Zones</a></li>
+                  <li><a href="bestzone.html" class="menu-link submenu-link">Best Zone</a></li>
+                  <li><a href="worstzone.html" class="menu-link submenu-link">Worst Zone</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="about5s-main">
+    <div class="about5s-shell">
+      <h1 class="about5s-title">ABOUT 5S</h1>
+      <p class="about5s-desc" id="about5sDescription">
+        5S is a workplace organization method used in industries to improve efficiency, safety, and productivity while reducing waste.
+        It consists of five steps: Sort, Set in Order, Shine, Standardize, and Sustain.Originating in Japan and popularized through the Toyota Production
+        System, it focuses on creating clean and well-organized workspaces.5S ensures every item has a designated place, making problems, missing
+        tools, and inefficiencies easy to identify.
+      </p>
+
+      <div class="about5s-tabs" role="navigation" aria-label="5S pages">
+        <a class="about5s-tab" href="1s.html">1S - Sort</a>
+        <a class="about5s-tab" href="2s.html">2S - Set in Order</a>
+        <a class="about5s-tab" href="3s.html">3S - Shine</a>
+        <a class="about5s-tab" href="4s.html">4S - Standarize</a>
+        <a class="about5s-tab" href="5s.html">5S - Sustain</a>
+      </div>
+
+      <div class="about5s-video-stage">
+        <div class="about5s-video-frame" aria-label="About 5S video">
+          <video class="about5s-video" autoplay muted loop playsinline id="about5sVideo">
+            <source id="about5sVideoSource" src="" type="video/mp4">
+          </video>
+          <div class="about5s-video-fallback" id="about5sVideoFallback">VIDEO PLAYBACK</div>
+        </div>
+
+        <div class="about5s-graphic" aria-label="5S cycle illustration">
+          <img
+            src="5s wheel diagram.jpg"
+            alt="5S cycle showing Sort, Set in Order, Shine, Standardize and Sustain"
+            class="about5s-graphic-img"
+          >
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

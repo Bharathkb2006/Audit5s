@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FPP Photos</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <a class="s-back-btn" href="fpp.html" aria-label="Back to FPP master list">
+    <span class="s-back-btn-icon" aria-hidden="true"></span>
+  </a>
+
+  <main class="full-shell">
+    <div style="width:min(1400px,100%);display:grid;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <h1 style="font-size:18px;font-weight:900;letter-spacing:.03em">FPP PHOTOS</h1>
+        <div id="fppPhotoTitle" style="font-weight:800;color:rgba(0,0,0,.65)"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="photos-grid">
+        <section>
+          <div style="font-weight:900;margin-bottom:8px">Fixed point photograph</div>
+          <div class="full-frame" style="height:min(60vh,620px)">
+            <div class="full-fallback" id="fppMainFallback">NO IMAGE</div>
+            <img id="fppMainImage" class="full-img" alt="Fixed point photograph" style="display:none" />
+          </div>
+        </section>
+        <section>
+          <div style="font-weight:900;margin-bottom:8px">Actual snapshot on shop floor</div>
+          <div class="full-frame" style="height:min(60vh,620px)">
+            <div class="full-fallback" id="fppSnapshotFallback">NO IMAGE</div>
+            <img id="fppSnapshotImage" class="full-img" alt="Actual snapshot" style="display:none" />
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="offline-store.js"></script>
+  <script src="fpp-photos.js"></script>
+</body>
+</html>
+

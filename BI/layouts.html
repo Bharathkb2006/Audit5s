@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layouts | Brakes India</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="layout-page-body">
+  <header class="header">
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo">
+      <img src="brakes india pagr.png" alt="Brakes India Logo" class="site-logo">
+    </div>
+    <a href="admin-login.html" class="profile-icon profile-link" aria-label="Admin Login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+      </svg>
+    </a>
+  </header>
+
+  <nav class="side-menu" id="sideMenu" aria-hidden="true">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-panel">
+      <div class="menu-panel-scroll">
+        <ul class="menu-list">
+          <li><a href="index.html" class="menu-link active">Home</a></li>
+          <li class="menu-parent">
+            <button type="button" class="menu-link menu-parent-toggle" aria-expanded="false">
+              &gt; 5S Gallery
+            </button>
+            <ul class="submenu" hidden>
+              <li><a href="About5s.html" class="menu-link submenu-link">About 5S</a></li>
+              <li><a href="5sornogram.html" class="menu-link submenu-link">5S Ornogram</a></li>
+              <li><a href="layouts.html" class="menu-link submenu-link">Layouts</a></li>
+              <li><a href="fpp.html" class="menu-link submenu-link">FPP</a></li>
+              <li class="menu-parent">
+                <button type="button" class="menu-link menu-parent-toggle" aria-expanded="false">
+                  &gt; 5S Plan
+                </button>
+                <ul class="submenu" hidden>
+                  <li><a href="summary.html" class="menu-link submenu-link">Summary</a></li>
+                  <li><a href="5szones.html" class="menu-link submenu-link">5s Zones</a></li>
+                  <li><a href="bestzone.html" class="menu-link submenu-link">Best Zone</a></li>
+                  <li><a href="worstzone.html" class="menu-link submenu-link">Worst Zone</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-inner">
+      <section class="about-section">
+        <h1 class="about5s-title">LAYOUTS</h1>
+        <p class="about5s-desc">
+          Select a layout from the buttons below to view the corresponding layout images.
+
+        <div class="about5s-tabs" role="navigation" aria-label="Layout pages">
+          <a class="about5s-tab" href="barcutting-layout.html">Barcutting Layout</a>
+          <a class="about5s-tab" href="ground-floor-layout.html">Ground Floor Layout</a>
+          <a class="about5s-tab" href="first-floor-layout.html">First Floor Layout</a>
+          <a class="about5s-tab" href="second-floor-layout.html">Second Floor Layout</a>
+        </div>
+        <div class="about-gallery-marquee">
+          <div class="about-gallery-track">
+            <div class="about-gallery-group">
+              <!-- Replace with <img src="images/your-image-1.jpg" alt="Description"> when you upload -->
+              <div class="upload-placeholder"><img src="unit18.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="bar cutting.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="abs.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="catridge assembly.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="bracket line.jpg" alt="Description"></div>
+            </div>
+            <div class="about-gallery-group">
+              <!-- DUPLICATE the same images here for seamless loop -->
+              <div class="upload-placeholder"><img src="unit18.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="bar cutting.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="abs.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="catridge assembly.jpg" alt="Description"></div>
+              <div class="upload-placeholder"><img src="bracket line.jpg" alt="Description"></div>
+            </div>
+          </div>
+        </div>
+        
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

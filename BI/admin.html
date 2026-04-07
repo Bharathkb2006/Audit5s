@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-page-body">
+  <header class="admin-header">
+    <div class="admin-title">
+      <h1>Admin Dashboard</h1>
+      <p>Admin area.</p>
+    </div>
+    <div class="admin-actions">
+      <button class="admin-secondary-btn" id="clearStorageBtn" type="button">Clear Media Storage</button>
+      <button class="admin-secondary-btn" id="logoutBtn" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-dashboard">
+    <section class="admin-section">
+      <h2>About 5S / 1S–5S (Media)</h2>
+      <p class="admin-note">Choose media files (1920×1080 recommended). Videos play autoplay+loop on the pages.</p>
+
+      <div class="admin-form admin-media-grid">
+        <label class="admin-field">
+          About 5S video
+          <input id="about5sVideoFile" type="file" accept="video/*" />
+        </label>
+
+        <label class="admin-field">
+          1S video
+          <input id="s1VideoFile" type="file" accept="video/*" />
+        </label>
+        <label class="admin-field">
+          1S image
+          <input id="s1ImageFile" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          2S video
+          <input id="s2VideoFile" type="file" accept="video/*" />
+        </label>
+        <label class="admin-field">
+          2S image
+          <input id="s2ImageFile" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          3S video
+          <input id="s3VideoFile" type="file" accept="video/*" />
+        </label>
+        <label class="admin-field">
+          3S image
+          <input id="s3ImageFile" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          4S video
+          <input id="s4VideoFile" type="file" accept="video/*" />
+        </label>
+        <label class="admin-field">
+          4S image
+          <input id="s4ImageFile" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          5S video
+          <input id="s5VideoFile" type="file" accept="video/*" />
+        </label>
+        <label class="admin-field">
+          5S image
+          <input id="s5ImageFile" type="file" accept="image/*" />
+        </label>
+
+        <div class="admin-actions admin-media-actions">
+          <button class="admin-primary-btn admin-save is-hidden" id="mediaSave" type="button" disabled>Save</button>
+        </div>
+        <span id="mediaStatus" class="admin-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="admin-section" id="organogramSection">
+      <h2>5S Organogram</h2>
+      <p class="admin-note">Upload the Organogram image. It will show in `5sornogram.html`.</p>
+
+      <div class="admin-form">
+        <label class="admin-field">
+          Choose file
+          <input id="organogramUpload" type="file" accept="image/*" />
+        </label>
+        <div class="admin-actions">
+          <button class="admin-primary-btn admin-save is-hidden" id="organogramSave" type="button" disabled>Save</button>
+        </div>
+        <span id="status" class="admin-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="admin-section" id="layoutsSection">
+      <h2>Layouts (1920×1080 images)</h2>
+      <p class="admin-note">Upload one image for each layout. They will show on the full-screen layout pages.</p>
+
+      <div class="admin-form">
+        <label class="admin-field">
+          Barcutting layout image
+          <input id="layoutBarcuttingUpload" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          Ground floor layout image
+          <input id="layoutGroundUpload" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          First floor layout image
+          <input id="layoutFirstUpload" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          Second floor layout image
+          <input id="layoutSecondUpload" type="file" accept="image/*" />
+        </label>
+
+        <div class="admin-actions">
+          <button class="admin-primary-btn admin-save is-hidden" id="layoutsSave" type="button" disabled>Save</button>
+        </div>
+        <span id="layoutsStatus" class="admin-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="admin-section" id="summaryImagesSection">
+      <h2>Summary Page Images</h2>
+      <p class="admin-note">Upload up to three images for the Summary page carousel. All images will display at the same size as the current layout image.</p>
+
+      <div class="admin-form">
+        <label class="admin-field">
+          Summary image 1
+          <input id="summaryImage1Upload" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          Summary image 2
+          <input id="summaryImage2Upload" type="file" accept="image/*" />
+        </label>
+        <label class="admin-field">
+          Summary image 3
+          <input id="summaryImage3Upload" type="file" accept="image/*" />
+        </label>
+
+        <div class="admin-actions">
+          <button class="admin-primary-btn admin-save is-hidden" id="summaryImagesSave" type="button" disabled>Save</button>
+        </div>
+        <span id="summaryImagesStatus" class="admin-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="admin-section" id="zoneDataSection">
+      <h2>5S Zone Data (Scores &amp; Observations)</h2>
+      <p class="admin-note">Edit the score table and observations for each zone here. Save Table updates the frontend for the selected week range. Observations save separately.</p>
+
+      <div class="admin-form">
+        <label class="admin-field">
+          Zone
+          <select id="zoneDataZoneSelect">
+            <option value="1">Zone 1</option><option value="2">Zone 2</option><option value="3">Zone 3</option><option value="4">Zone 4</option>
+            <option value="5">Zone 5</option><option value="6">Zone 6</option><option value="7">Zone 7</option><option value="8">Zone 8</option>
+            <option value="9">Zone 9</option><option value="10">Zone 10</option><option value="11">Zone 11</option><option value="12">Zone 12</option>
+            <option value="13">Zone 13</option><option value="14">Zone 14</option><option value="15">Zone 15</option><option value="16">Zone 16</option>
+          </select>
+        </label>
+
+        <div class="admin-subsection">
+          <h3 class="admin-subtitle-h3">Zone Header (Title / Champion / Leader)</h3>
+          <p class="admin-note">These details show on the zone detail page (left/right cards). Upload photos (square recommended).</p>
+
+          <div class="admin-zone-header-grid">
+            <label class="admin-field admin-zone-title">
+              Zone display title
+              <input id="zoneHeaderTitle" type="text" placeholder="ZONE - 1" />
+            </label>
+
+            <div class="admin-zone-person">
+              <div class="admin-zone-person-title">Zone Champion</div>
+              <label class="admin-field">
+                Name
+                <input id="zoneChampionName" type="text" placeholder="Name" />
+              </label>
+              <label class="admin-field">
+                Photo
+                <input id="zoneChampionPhoto" type="file" accept="image/*" />
+              </label>
+            </div>
+
+            <div class="admin-zone-person">
+              <div class="admin-zone-person-title">Zone Leader</div>
+              <label class="admin-field">
+                Name
+                <input id="zoneLeaderName" type="text" placeholder="Name" />
+              </label>
+              <label class="admin-field">
+                Photo
+                <input id="zoneLeaderPhoto" type="file" accept="image/*" />
+              </label>
+            </div>
+          </div>
+
+          <div class="admin-actions">
+            <button class="admin-primary-btn" id="zoneHeaderSave" type="button">Save Zone Header</button>
+          </div>
+          <span id="zoneHeaderStatus" class="admin-status" aria-live="polite"></span>
+        </div>
+
+        <label class="admin-field">
+          Week range (for score table)
+          <select id="zoneDataWeekRange">
+            <option value="1">Weeks 1-5</option><option value="6">Weeks 6-10</option><option value="11">Weeks 11-15</option><option value="16">Weeks 16-20</option>
+            <option value="21">Weeks 21-25</option><option value="26">Weeks 26-30</option><option value="31">Weeks 31-35</option><option value="36">Weeks 36-40</option>
+            <option value="41">Weeks 41-45</option><option value="48">Weeks 48-52</option>
+          </select>
+        </label>
+        <div class="zone-admin-table-wrap">
+          <table class="zone-audit-table zone-audit-table--admin" id="zoneAdminAuditTable">
+            <thead>
+              <tr>
+                <th class="zone-audit-location" rowspan="3">Location</th>
+                <th class="zone-audit-checkpoints" rowspan="3">Check Points</th>
+                <th colspan="5" class="zone-audit-week" data-w="1">Week No: <input type="number" min="1" max="52" id="zoneAdminW1No"></th>
+                <th colspan="5" class="zone-audit-week" data-w="2">Week No: <input type="number" min="1" max="52" id="zoneAdminW2No"></th>
+                <th colspan="5" class="zone-audit-week" data-w="3">Week No: <input type="number" min="1" max="52" id="zoneAdminW3No"></th>
+                <th colspan="5" class="zone-audit-week" data-w="4">Week No: <input type="number" min="1" max="52" id="zoneAdminW4No"></th>
+                <th colspan="5" class="zone-audit-week" data-w="5">Week No: <input type="number" min="1" max="52" id="zoneAdminW5No"></th>
+              </tr>
+              <tr class="zone-audit-date-row">
+                <th colspan="5" class="zone-audit-week" data-w="1">Dt: <input type="text" id="zoneAdminW1Dt" placeholder="dd/mm/yyyy"></th>
+                <th colspan="5" class="zone-audit-week" data-w="2">Dt: <input type="text" id="zoneAdminW2Dt" placeholder="dd/mm/yyyy"></th>
+                <th colspan="5" class="zone-audit-week" data-w="3">Dt: <input type="text" id="zoneAdminW3Dt" placeholder="dd/mm/yyyy"></th>
+                <th colspan="5" class="zone-audit-week" data-w="4">Dt: <input type="text" id="zoneAdminW4Dt" placeholder="dd/mm/yyyy"></th>
+                <th colspan="5" class="zone-audit-week" data-w="5">Dt: <input type="text" id="zoneAdminW5Dt" placeholder="dd/mm/yyyy"></th>
+              </tr>
+              <tr class="zone-audit-day-row">
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+              </tr>
+            </thead>
+            <tbody id="zoneAdminAuditBody">
+              <!-- filled by admin-5szone.js -->
+            </tbody>
+          </table>
+        </div>
+        <p class="admin-note" style="margin-top:8px">Total and Checked By appear in the free area below (one value per week).</p>
+        <div class="zone-admin-total-by" id="zoneAdminTotalBy">
+          <!-- Total row and By row filled by JS -->
+        </div>
+        <div class="admin-actions">
+          <button class="admin-primary-btn" id="zoneTableSave" type="button">Save Table</button>
+        </div>
+        <span id="zoneTableStatus" class="admin-status" aria-live="polite"></span>
+
+        <h3 style="margin-top:24px">Observations (7 columns, max 3 per week)</h3>
+        <div class="zone-admin-obs-scroll">
+          <table class="zone-obs-table zone-obs-table--admin" id="zoneAdminObsTable">
+            <thead>
+              <tr>
+                <th>Week no</th><th>Location</th><th>Observation</th><th>Corrective Action</th><th>Resp</th><th>Target Date</th><th>Completed Date</th>
+              </tr>
+            </thead>
+            <tbody id="zoneAdminObsBody"></tbody>
+          </table>
+        </div>
+        <div class="admin-actions">
+          <button class="admin-primary-btn" id="zoneObsSave" type="button">Save Observations</button>
+        </div>
+        <span id="zoneObsStatus" class="admin-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="admin-section" id="bestWorstZoneSection">
+      <h2>Best Zone (2 Slides)</h2>
+      <p class="admin-note">Upload 2 images for Best Zone. These show on `bestzone.html` (2-slide carousel like Summary).</p>
+
+      <div class="admin-form">
+        <div class="admin-subsection">
+          <h3 class="admin-subtitle-h3">Best Zone</h3>
+          <label class="admin-field">
+            Best zone image 1
+            <input id="bestZoneImage1Upload" type="file" accept="image/*" />
+          </label>
+          <label class="admin-field">
+            Best zone image 2
+            <input id="bestZoneImage2Upload" type="file" accept="image/*" />
+          </label>
+          <div class="admin-actions">
+            <button class="admin-primary-btn admin-save is-hidden" id="bestZoneSave" type="button" disabled>Save</button>
+          </div>
+          <span id="bestZoneStatus" class="admin-status" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+    <section class="admin-section" id="fppSection">
+      <h2>FPP Management</h2>
+      <p class="admin-note">Edit 16 rows and upload month wise + row photos.</p>
+    
+      <div class="admin-form admin-grid">
+    
+        <div>
+          <h3 style="font-size:16px;margin:6px 0 10px;">FPP Table (16 rows)</h3>
+    
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sl</th>
+                <th>5S Zone No</th>
+                <th>5S Zone Desc</th>
+                <th>FPP No</th>
+                <th>FPP Desc</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+    
+          <div class="admin-actions">
+            <button class="admin-primary-btn" id="saveTableBtn" type="button">Save Table</button>
+            <span id="tableStatus" class="admin-status"></span>
+          </div>
+    
+          <div style="margin-top:20px">
+            <h3 style="font-size:16px;margin:6px 0 10px;">Month Wise Layout</h3>
+    
+            <label class="admin-field">
+              Upload image
+              <input id="monthWiseInput" type="file" accept="image/*" />
+            </label>
+    
+            <div class="admin-actions">
+              <button class="admin-primary-btn" id="saveMonthWiseBtn" type="button">Save Month Wise</button>
+              <span id="monthWiseStatus" class="admin-status"></span>
+            </div>
+          </div>
+        </div>
+    
+    
+        <div>
+          <h3 style="font-size:16px;margin:6px 0 10px;">Row Photos (2 photos each)</h3>
+    
+          <div class="photos-block" id="photosBlock"></div>
+    
+          <div class="admin-actions">
+            <button class="admin-primary-btn" id="savePhotosBtn" type="button">Save Photos</button>
+            <span id="photosStatus" class="admin-status"></span>
+          </div>
+        </div>
+    
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+  <script src="admin-5szone.js"></script>
+  <script src="offline-store.js"></script>
+<script src="admin-fpp.js"></script>
+</body>
+</html>
+
