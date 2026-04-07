@@ -11,7 +11,6 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { useApp } from '../context/AppProvider';
-import { biMediaGet } from '../lib/biMediaIdb';
 import {
   computeTotalFromDaily,
   DEFAULT_LOCATION,
@@ -76,39 +75,9 @@ export default function ZoneDetailPage() {
   }, [zoneId]);
 
   useEffect(() => {
-    let cRev;
-    let lRev;
-    let cancelled = false;
     const m = zoneData.meta || {};
-    const urlC = (m.championPhotoUrl || '').trim();
-    const urlL = (m.leaderPhotoUrl || '').trim();
-    (async () => {
-      if (urlC) {
-        if (!cancelled) setChampUrl(urlC);
-      } else {
-        const cBlob = await biMediaGet(`zone:${zoneId}:championPhoto`);
-        if (cancelled) return;
-        if (cBlob) {
-          cRev = URL.createObjectURL(cBlob);
-          setChampUrl(cRev);
-        } else setChampUrl('');
-      }
-      if (urlL) {
-        if (!cancelled) setLeaderUrl(urlL);
-      } else {
-        const lBlob = await biMediaGet(`zone:${zoneId}:leaderPhoto`);
-        if (cancelled) return;
-        if (lBlob) {
-          lRev = URL.createObjectURL(lBlob);
-          setLeaderUrl(lRev);
-        } else setLeaderUrl('');
-      }
-    })();
-    return () => {
-      cancelled = true;
-      if (cRev) URL.revokeObjectURL(cRev);
-      if (lRev) URL.revokeObjectURL(lRev);
-    };
+    setChampUrl((m.championPhotoUrl || '').trim());
+    setLeaderUrl((m.leaderPhotoUrl || '').trim());
   }, [zoneId, zoneData]);
 
   const chartData = useMemo(() => {

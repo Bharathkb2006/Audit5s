@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useApp } from '../context/AppProvider';
 
 function normalizePath(p) {
   if (!p) return '';
@@ -24,7 +23,6 @@ const CONFIG = {
 };
 
 export function useSummaryCarousel(mode, assets, fallbackBarcuttingUrl) {
-  const { getBiMedia } = useApp();
   const [urls, setUrls] = useState([]);
   const [index, setIndex] = useState(0);
   const urlsRef = useRef([]);
@@ -38,37 +36,16 @@ export function useSummaryCarousel(mode, assets, fallbackBarcuttingUrl) {
   }, [index]);
 
   useEffect(() => {
-    const objectUrls = [];
-    let cancelled = false;
-    (async () => {
-      const cfg = CONFIG[mode] || CONFIG.summary;
-      const out = [];
-      for (const item of cfg) {
-        const inline = assets && typeof assets[item.legacyKey] === 'string' ? assets[item.legacyKey].trim() : '';
-        if (inline) {
-          out.push(normalizePath(inline));
-          continue;
-        }
-        if (assets && assets[item.storedFlag]) {
-          const blob = await getBiMedia(item.storeKey);
-          if (blob) {
-            const u = URL.createObjectURL(blob);
-            objectUrls.push(u);
-            out.push(u);
-          }
-        }
-      }
-      if (!out.length && fallbackBarcuttingUrl) out.push(fallbackBarcuttingUrl);
-      if (!cancelled) {
-        setUrls(out);
-        setIndex(0);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      objectUrls.forEach((u) => URL.revokeObjectURL(u));
-    };
-  }, [mode, assets, getBiMedia, fallbackBarcuttingUrl]);
+    const cfg = CONFIG[mode] || CONFIG.summary;
+    const out = [];
+    for (const item of cfg) {
+      const inline = assets && typeof assets[item.legacyKey] === 'string' ? assets[item.legacyKey].trim() : '';
+      if (inline) out.push(normalizePath(inline));
+    }
+    if (!out.length && fallbackBarcuttingUrl) out.push(fallbackBarcuttingUrl);
+    setUrls(out);
+    setIndex(0);
+  }, [mode, assets, fallbackBarcuttingUrl]);
 
   const showAt = useCallback((i) => {
     const list = urlsRef.current;

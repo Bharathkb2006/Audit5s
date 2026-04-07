@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppProvider';
-import { fppGetBlob } from '../lib/fppIdb';
 
 export default function FppPhotosPage() {
   const [searchParams] = useSearchParams();
@@ -22,42 +21,14 @@ export default function FppPhotosPage() {
   }, [fppData, rowId]);
 
   useEffect(() => {
-    let r1;
-    let r2;
-    let cancelled = false;
-    (async () => {
-      const photos = fppData?.fppPhotos?.[rowId];
-      if (!photos) {
-        if (!cancelled) {
-          setMainUrl('');
-          setSnapUrl('');
-        }
-        return;
-      }
-      if (photos.mainUrl) {
-        if (!cancelled) setMainUrl(photos.mainUrl);
-      } else if (photos.mainKey) {
-        const b = await fppGetBlob(photos.mainKey);
-        if (!cancelled && b) {
-          r1 = URL.createObjectURL(b);
-          setMainUrl(r1);
-        } else if (!cancelled) setMainUrl('');
-      } else if (!cancelled) setMainUrl('');
-      if (photos.snapshotUrl) {
-        if (!cancelled) setSnapUrl(photos.snapshotUrl);
-      } else if (photos.snapshotKey) {
-        const b2 = await fppGetBlob(photos.snapshotKey);
-        if (!cancelled && b2) {
-          r2 = URL.createObjectURL(b2);
-          setSnapUrl(r2);
-        } else if (!cancelled) setSnapUrl('');
-      } else if (!cancelled) setSnapUrl('');
-    })();
-    return () => {
-      cancelled = true;
-      if (r1) URL.revokeObjectURL(r1);
-      if (r2) URL.revokeObjectURL(r2);
-    };
+    const photos = fppData?.fppPhotos?.[rowId];
+    if (!photos) {
+      setMainUrl('');
+      setSnapUrl('');
+      return;
+    }
+    setMainUrl((photos.mainUrl || '').trim());
+    setSnapUrl((photos.snapshotUrl || '').trim());
   }, [fppData, rowId]);
 
   return (

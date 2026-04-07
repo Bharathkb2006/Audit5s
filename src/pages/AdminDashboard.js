@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppProvider';
 import { defaultFppContent } from '../lib/defaults';
-import { fppMakeKey, fppPutBlob } from '../lib/fppIdb';
 import { uploadPublicFile } from '../lib/firebase/storageUpload';
 import AdminZonePanel from '../admin/AdminZonePanel';
 
@@ -22,17 +21,7 @@ const MEDIA_KEYS = [
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const {
-    adminAuthed,
-    logoutAdmin,
-    siteContent,
-    patchSiteContent,
-    putBiMedia,
-    clearAllMediaStorage,
-    fppData,
-    setFppData,
-    firebaseEnabled,
-  } = useApp();
+  const { adminAuthed, logoutAdmin, putBiMedia, clearAllMediaStorage, fppData, setFppData } = useApp();
 
   const [pendingMedia, setPendingMedia] = useState({});
   const [mediaStatus, setMediaStatus] = useState('');
@@ -56,36 +45,16 @@ export default function AdminDashboard() {
       return;
     }
     setMediaStatus('Saving…');
-    if (firebaseEnabled) {
-      try {
-        for (const [fileKey, storeKey] of MEDIA_KEYS) {
-          const file = pendingMedia[fileKey];
-          if (file) await putBiMedia(storeKey, file);
-        }
-        setPendingMedia({});
-        setMediaStatus('Saved.');
-      } catch {
-        setMediaStatus('Save failed.');
+    try {
+      for (const [fileKey, storeKey] of MEDIA_KEYS) {
+        const file = pendingMedia[fileKey];
+        if (file) await putBiMedia(storeKey, file);
       }
-      return;
+      setPendingMedia({});
+      setMediaStatus('Saved.');
+    } catch {
+      setMediaStatus('Save failed.');
     }
-    const jobs = [];
-    const next = JSON.parse(JSON.stringify(siteContent || {}));
-    next.assets = next.assets || {};
-    for (const [fileKey, storeKey, flagKey] of MEDIA_KEYS) {
-      const file = pendingMedia[fileKey];
-      if (!file) continue;
-      jobs.push(
-        putBiMedia(storeKey, file).then(() => {
-          next.assets[flagKey] = true;
-        })
-      );
-    }
-    const results = await Promise.allSettled(jobs);
-    const failed = results.some((r) => r.status === 'rejected');
-    patchSiteContent(() => next);
-    setPendingMedia({});
-    setMediaStatus(failed ? 'Saved with some errors. Try again for failed file(s).' : 'Saved.');
   };
 
   const saveOrganogram = async () => {
@@ -96,15 +65,6 @@ export default function AdminDashboard() {
     setOrgStatus('Saving…');
     try {
       await putBiMedia('organogramImage', orgPending);
-      if (!firebaseEnabled) {
-        patchSiteContent((prev) => {
-          const n = JSON.parse(JSON.stringify(prev || {}));
-          n.assets = n.assets || {};
-          n.assets.organogramImageStored = true;
-          delete n.assets.organogramImage;
-          return n;
-        });
-      }
       setOrgPending(null);
       setOrgStatus('Saved.');
     } catch {
@@ -125,35 +85,16 @@ export default function AdminDashboard() {
       return;
     }
     setLayoutStatus('Saving…');
-    if (firebaseEnabled) {
-      try {
-        for (const [keyName, storageKey] of map) {
-          const file = layoutPending[keyName];
-          if (file) await putBiMedia(storageKey, file);
-        }
-        setLayoutPending({});
-        setLayoutStatus('Saved.');
-      } catch {
-        setLayoutStatus('Save failed.');
+    try {
+      for (const [keyName, storageKey] of map) {
+        const file = layoutPending[keyName];
+        if (file) await putBiMedia(storageKey, file);
       }
-      return;
+      setLayoutPending({});
+      setLayoutStatus('Saved.');
+    } catch {
+      setLayoutStatus('Save failed.');
     }
-    const next = JSON.parse(JSON.stringify(siteContent || {}));
-    next.assets = next.assets || {};
-    for (const [keyName, storageKey, flagKey, legacyKey] of map) {
-      const file = layoutPending[keyName];
-      if (!file) continue;
-      try {
-        await putBiMedia(storageKey, file);
-        next.assets[flagKey] = true;
-        if (next.assets[legacyKey]) delete next.assets[legacyKey];
-      } catch {
-        /* continue */
-      }
-    }
-    patchSiteContent(() => next);
-    setLayoutPending({});
-    setLayoutStatus('Saved.');
   };
 
   const saveSummaryImages = async () => {
@@ -168,31 +109,16 @@ export default function AdminDashboard() {
       return;
     }
     setSumStatus('Saving…');
-    if (firebaseEnabled) {
-      try {
-        for (const [pk, storeKey] of items) {
-          const file = sumPending[pk];
-          if (file) await putBiMedia(storeKey, file);
-        }
-        setSumPending({});
-        setSumStatus('Saved.');
-      } catch {
-        setSumStatus('Save failed.');
+    try {
+      for (const [pk, storeKey] of items) {
+        const file = sumPending[pk];
+        if (file) await putBiMedia(storeKey, file);
       }
-      return;
+      setSumPending({});
+      setSumStatus('Saved.');
+    } catch {
+      setSumStatus('Save failed.');
     }
-    const next = JSON.parse(JSON.stringify(siteContent || {}));
-    next.assets = next.assets || {};
-    for (const [pk, storeKey, flagKey, legacyKey] of items) {
-      const file = sumPending[pk];
-      if (!file) continue;
-      await putBiMedia(storeKey, file);
-      next.assets[flagKey] = true;
-      if (next.assets[legacyKey]) delete next.assets[legacyKey];
-    }
-    patchSiteContent(() => next);
-    setSumPending({});
-    setSumStatus('Saved.');
   };
 
   const saveBest = async () => {
@@ -201,30 +127,14 @@ export default function AdminDashboard() {
       return;
     }
     setBestStatus('Saving…');
-    if (firebaseEnabled) {
-      try {
-        if (bestPending.best1) await putBiMedia('bestZoneImage1', bestPending.best1);
-        if (bestPending.best2) await putBiMedia('bestZoneImage2', bestPending.best2);
-        setBestPending({});
-        setBestStatus('Saved.');
-      } catch {
-        setBestStatus('Save failed.');
-      }
-      return;
+    try {
+      if (bestPending.best1) await putBiMedia('bestZoneImage1', bestPending.best1);
+      if (bestPending.best2) await putBiMedia('bestZoneImage2', bestPending.best2);
+      setBestPending({});
+      setBestStatus('Saved.');
+    } catch {
+      setBestStatus('Save failed.');
     }
-    const next = JSON.parse(JSON.stringify(siteContent || {}));
-    next.assets = next.assets || {};
-    if (bestPending.best1) {
-      await putBiMedia('bestZoneImage1', bestPending.best1);
-      next.assets.bestZoneImage1Stored = true;
-    }
-    if (bestPending.best2) {
-      await putBiMedia('bestZoneImage2', bestPending.best2);
-      next.assets.bestZoneImage2Stored = true;
-    }
-    patchSiteContent(() => next);
-    setBestPending({});
-    setBestStatus('Saved.');
   };
 
   const saveWorst = async () => {
@@ -233,30 +143,14 @@ export default function AdminDashboard() {
       return;
     }
     setWorstStatus('Saving…');
-    if (firebaseEnabled) {
-      try {
-        if (worstPending.w1) await putBiMedia('worstZoneImage1', worstPending.w1);
-        if (worstPending.w2) await putBiMedia('worstZoneImage2', worstPending.w2);
-        setWorstPending({});
-        setWorstStatus('Saved.');
-      } catch {
-        setWorstStatus('Save failed.');
-      }
-      return;
+    try {
+      if (worstPending.w1) await putBiMedia('worstZoneImage1', worstPending.w1);
+      if (worstPending.w2) await putBiMedia('worstZoneImage2', worstPending.w2);
+      setWorstPending({});
+      setWorstStatus('Saved.');
+    } catch {
+      setWorstStatus('Save failed.');
     }
-    const next = JSON.parse(JSON.stringify(siteContent || {}));
-    next.assets = next.assets || {};
-    if (worstPending.w1) {
-      await putBiMedia('worstZoneImage1', worstPending.w1);
-      next.assets.worstZoneImage1Stored = true;
-    }
-    if (worstPending.w2) {
-      await putBiMedia('worstZoneImage2', worstPending.w2);
-      next.assets.worstZoneImage2Stored = true;
-    }
-    patchSiteContent(() => next);
-    setWorstPending({});
-    setWorstStatus('Saved.');
   };
 
   const saveFppTable = useCallback(() => {
@@ -298,16 +192,9 @@ export default function AdminDashboard() {
     try {
       const next = JSON.parse(JSON.stringify(fppData || defaultFppContent()));
       next.assets = next.assets || {};
-      if (firebaseEnabled) {
-        const url = await uploadPublicFile('fpp/month-wise', file);
-        next.assets.monthWiseLayoutUrl = url;
-        delete next.assets.monthWiseLayoutKey;
-      } else {
-        const key = fppMakeKey('month-wise-layout');
-        await fppPutBlob(key, file);
-        next.assets.monthWiseLayoutKey = key;
-        delete next.assets.monthWiseLayoutUrl;
-      }
+      const url = await uploadPublicFile('fpp/month-wise', file);
+      next.assets.monthWiseLayoutUrl = url;
+      delete next.assets.monthWiseLayoutKey;
       setFppData(next);
       inp.value = '';
       setMonthWiseStatus('Saved.');
@@ -332,26 +219,12 @@ export default function AdminDashboard() {
         any = true;
         const photos = { ...(next.fppPhotos[id] || {}) };
         if (mainFile) {
-          if (firebaseEnabled) {
-            photos.mainUrl = await uploadPublicFile(`fpp/row-${id}/main`, mainFile);
-            delete photos.mainKey;
-          } else {
-            const mk = fppMakeKey(`fpp-main-${id}`);
-            await fppPutBlob(mk, mainFile);
-            photos.mainKey = mk;
-            delete photos.mainUrl;
-          }
+          photos.mainUrl = await uploadPublicFile(`fpp/row-${id}/main`, mainFile);
+          delete photos.mainKey;
         }
         if (snapFile) {
-          if (firebaseEnabled) {
-            photos.snapshotUrl = await uploadPublicFile(`fpp/row-${id}/snapshot`, snapFile);
-            delete photos.snapshotKey;
-          } else {
-            const sk = fppMakeKey(`fpp-snap-${id}`);
-            await fppPutBlob(sk, snapFile);
-            photos.snapshotKey = sk;
-            delete photos.snapshotUrl;
-          }
+          photos.snapshotUrl = await uploadPublicFile(`fpp/row-${id}/snapshot`, snapFile);
+          delete photos.snapshotKey;
         }
         next.fppPhotos[id] = photos;
       }

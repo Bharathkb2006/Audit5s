@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppProvider';
 
 export default function AdminLoginPage() {
-  const { adminAuthed, loginAdmin, firebaseAuthEnabled } = useApp();
+  const { adminAuthed, loginAdmin } = useApp();
   const [err, setErr] = useState('');
-
-  if (adminAuthed) {
-    return <Navigate to="/admin" replace />;
-  }
 
   return (
     <main className="admin-login">
       <div className="admin-card">
         <h1>Admin Login</h1>
         <p className="admin-subtitle">Sign in to update website content and images.</p>
-        {firebaseAuthEnabled ? (
+        {adminAuthed ? (
           <p className="admin-note" style={{ marginBottom: 12 }}>
-            Use the Firebase Auth email and password you created in the Firebase console.
+            You&apos;re already logged in. You can open the dashboard at{' '}
+            <code>/admin</code> or go back to the website below.
           </p>
-        ) : null}
+        ) : (
+          <p className="admin-note" style={{ marginBottom: 12 }}>
+            Default admin credentials: username <strong>admin</strong>, password{' '}
+            <strong>admin123</strong>.
+          </p>
+        )}
         <form
           id="loginForm"
           className="admin-form"
@@ -32,15 +34,13 @@ export default function AdminLoginPage() {
             const password = String(fd.get('password') || '');
             const ok = await loginAdmin(username, password);
             if (!ok) {
-              setErr(
-                firebaseAuthEnabled ? 'Invalid email or password' : 'Invalid username or password'
-              );
+              setErr('Invalid username or password');
             }
           }}
         >
           <label className="admin-field">
-            {firebaseAuthEnabled ? 'Email' : 'Username'}
-            <input name="username" type={firebaseAuthEnabled ? 'email' : 'text'} required />
+            Username
+            <input name="username" type="text" required />
           </label>
           <label className="admin-field">
             Password

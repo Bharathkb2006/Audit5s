@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useApp } from '../context/AppProvider';
 
 function normalizePath(p) {
   if (!p) return '';
@@ -7,36 +6,22 @@ function normalizePath(p) {
   return p.startsWith('/') ? p : `/${p}`;
 }
 
-export function useResolvedSrc(assets, legacyKey, storedFlag, idbKey) {
-  const { getBiMedia } = useApp();
+/**
+ * Resolves media URL from site content assets (Firebase Storage URLs or static paths).
+ * Legacy parameters storedFlag / idbKey are unused; kept for call-site compatibility.
+ */
+export function useResolvedSrc(assets, legacyKey, _storedFlag, _idbKey) {
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    let revokeUrl;
-    let cancelled = false;
-    (async () => {
-      const a = assets || {};
-      const legacy = typeof a[legacyKey] === 'string' ? a[legacyKey].trim() : '';
-      if (legacy) {
-        if (!cancelled) setUrl(normalizePath(legacy));
-        return;
-      }
-      if (a[storedFlag]) {
-        const blob = await getBiMedia(idbKey);
-        if (cancelled) return;
-        if (blob) {
-          revokeUrl = URL.createObjectURL(blob);
-          setUrl(revokeUrl);
-          return;
-        }
-      }
-      if (!cancelled) setUrl('');
-    })();
-    return () => {
-      cancelled = true;
-      if (revokeUrl) URL.revokeObjectURL(revokeUrl);
-    };
-  }, [assets, legacyKey, storedFlag, idbKey, getBiMedia]);
+    const a = assets || {};
+    const legacy = typeof a[legacyKey] === 'string' ? a[legacyKey].trim() : '';
+    if (legacy) {
+      setUrl(normalizePath(legacy));
+      return;
+    }
+    setUrl('');
+  }, [assets, legacyKey]);
 
   return url;
 }

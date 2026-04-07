@@ -43,3 +43,17 @@ export function fppGetBlob(key) {
 export function fppMakeKey(prefix) {
   return `${prefix || 'blob'}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
+
+/** Clears legacy IndexedDB used before Firebase Storage (optional migration cleanup). */
+export function fppClearAll() {
+  return new Promise((resolve) => {
+    if (!('indexedDB' in window)) {
+      resolve();
+      return;
+    }
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = () => resolve();
+    req.onerror = () => resolve();
+    req.onblocked = () => resolve();
+  });
+}

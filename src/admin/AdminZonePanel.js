@@ -10,7 +10,7 @@ import {
 } from '../lib/zonesCore';
 
 export default function AdminZonePanel() {
-  const { zonesData, setZonesData, putBiMedia, notifyZoneUpdated, firebaseEnabled } = useApp();
+  const { zonesData, setZonesData, putBiMedia, notifyZoneUpdated } = useApp();
   const [zoneId, setZoneId] = useState(1);
   const [rangeStart, setRangeStart] = useState(1);
   const [headerStatus, setHeaderStatus] = useState('');
@@ -50,20 +50,16 @@ export default function AdminZonePanel() {
     try {
       if (champFile) {
         const url = await putBiMedia(`zone:${zoneId}:championPhoto`, champFile);
-        if (url && firebaseEnabled) {
+        if (url) {
           zd.meta.championPhotoUrl = url;
           zd.meta.championPhotoStored = false;
-        } else {
-          zd.meta.championPhotoStored = true;
         }
       }
       if (leaderFile) {
         const url = await putBiMedia(`zone:${zoneId}:leaderPhoto`, leaderFile);
-        if (url && firebaseEnabled) {
+        if (url) {
           zd.meta.leaderPhotoUrl = url;
           zd.meta.leaderPhotoStored = false;
-        } else {
-          zd.meta.leaderPhotoStored = true;
         }
       }
       persistZone(zd);

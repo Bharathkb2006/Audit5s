@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppProvider';
-import { fppGetBlob } from '../lib/fppIdb';
 
 export default function FppMonthLayoutPage() {
   const { fppData } = useApp();
   const [url, setUrl] = useState('');
-  const key = fppData?.assets?.monthWiseLayoutKey || '';
-  const remoteUrl = fppData?.assets?.monthWiseLayoutUrl || '';
+  const remoteUrl = (fppData?.assets?.monthWiseLayoutUrl || '').trim();
 
   useEffect(() => {
     document.documentElement.classList.add('month-layout-html');
@@ -19,29 +17,8 @@ export default function FppMonthLayoutPage() {
   }, []);
 
   useEffect(() => {
-    if (remoteUrl) {
-      setUrl(remoteUrl);
-      return undefined;
-    }
-    let revoke;
-    let cancelled = false;
-    (async () => {
-      if (!key) {
-        if (!cancelled) setUrl('');
-        return;
-      }
-      const blob = await fppGetBlob(key);
-      if (cancelled) return;
-      if (blob) {
-        revoke = URL.createObjectURL(blob);
-        setUrl(revoke);
-      } else setUrl('');
-    })();
-    return () => {
-      cancelled = true;
-      if (revoke) URL.revokeObjectURL(revoke);
-    };
-  }, [key, remoteUrl]);
+    setUrl(remoteUrl);
+  }, [remoteUrl]);
 
   const hasImage = Boolean(url);
 

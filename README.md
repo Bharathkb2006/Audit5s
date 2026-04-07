@@ -1,6 +1,6 @@
 # Brakes India — React + Firebase
 
-Single-page app built with **Create React App** (React 18). Public site and admin dashboard data are stored in **Firebase Firestore** and **Firebase Storage** when `REACT_APP_*` variables are set.
+Single-page app built with **Create React App** (React 18). The app **requires** Firebase: site data, zones, FPP, and media URLs live in **Firestore** and **Firebase Storage**. There is **no** `localStorage` or IndexedDB-backed content path (admin “Clear media storage” only wipes legacy IndexedDB if present from older visits).
 
 ## Quick start
 
