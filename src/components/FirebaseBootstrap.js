@@ -11,9 +11,8 @@ export default function FirebaseBootstrap({ kind }) {
         <h1>Configuration required</h1>
         {missingFirebase ? (
           <p>
-            Firebase is not configured. Copy <code>.env.example</code> to <code>.env.local</code> and add your web app
-            keys from the Firebase console as <code>REACT_APP_FIREBASE_*</code> variables. On Vercel, add the same names
-            under Project → Settings → Environment Variables, then redeploy.
+            Firebase could not be initialized. Verify project keys in Vercel environment variables and confirm Firestore
+            + Storage are enabled in the same Firebase project.
           </p>
         ) : null}
       </div>
