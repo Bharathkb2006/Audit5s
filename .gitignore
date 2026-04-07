@@ -3,6 +3,7 @@ node_modules/
 
 # Production build
 build/
+dist/
 
 # Env with secrets (never commit)
 .env.local

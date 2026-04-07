@@ -1,10 +1,8 @@
 /**
- * Primary source: REACT_APP_* env vars.
- * Fallback source: fixed project config from Firebase console.
- * This keeps production working even if Vercel envs are missing/misconfigured.
+ * Fixed Firebase config for this project.
+ * Intentionally avoids env overrides to prevent Vercel bucket/project mismatch.
  */
-
-const FIREBASE_FALLBACK = {
+const FIREBASE_FIXED = {
   apiKey: 'AIzaSyBaGp7iu6vD7HHbed-q9kNZ_QONC1L8mEk',
   authDomain: 'sauddit.firebaseapp.com',
   projectId: 'sauddit',
@@ -12,12 +10,6 @@ const FIREBASE_FALLBACK = {
   messagingSenderId: '912653801013',
   appId: '1:912653801013:web:5b17bc6b013d76cf5f837c',
 };
-
-function readEnv(name, fallback = '') {
-  const v = process.env[name];
-  if (typeof v === 'string' && v.trim()) return v.trim();
-  return fallback;
-}
 
 export function isFirebaseConfigured() {
   const opts = firebaseOptions();
@@ -32,21 +24,16 @@ export function isFirebaseConfigured() {
 }
 
 export function isFirebaseAuthEnabled() {
-  return process.env.REACT_APP_FIREBASE_USE_AUTH === 'true';
+  return false;
 }
 
 export function firebaseOptions() {
-  const measurementId = readEnv('REACT_APP_FIREBASE_MEASUREMENT_ID', '');
+  const measurementId =
+    typeof import.meta.env.VITE_FIREBASE_MEASUREMENT_ID === 'string'
+      ? import.meta.env.VITE_FIREBASE_MEASUREMENT_ID.trim()
+      : '';
   return {
-    apiKey: readEnv('REACT_APP_FIREBASE_API_KEY', FIREBASE_FALLBACK.apiKey),
-    authDomain: readEnv('REACT_APP_FIREBASE_AUTH_DOMAIN', FIREBASE_FALLBACK.authDomain),
-    projectId: readEnv('REACT_APP_FIREBASE_PROJECT_ID', FIREBASE_FALLBACK.projectId),
-    storageBucket: readEnv('REACT_APP_FIREBASE_STORAGE_BUCKET', FIREBASE_FALLBACK.storageBucket),
-    messagingSenderId: readEnv(
-      'REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
-      FIREBASE_FALLBACK.messagingSenderId
-    ),
-    appId: readEnv('REACT_APP_FIREBASE_APP_ID', FIREBASE_FALLBACK.appId),
+    ...FIREBASE_FIXED,
     ...(measurementId ? { measurementId } : {}),
   };
 }

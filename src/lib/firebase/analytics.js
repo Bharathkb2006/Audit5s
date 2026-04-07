@@ -5,7 +5,7 @@ import { getAnalytics, isSupported } from 'firebase/analytics';
  * Safe to call once after the Firebase app is created.
  */
 export async function initFirebaseAnalytics(app) {
-  if (!app || !process.env.REACT_APP_FIREBASE_MEASUREMENT_ID) return null;
+  if (!app || !import.meta.env.VITE_FIREBASE_MEASUREMENT_ID) return null;
   try {
     if (await isSupported()) {
       return getAnalytics(app);
