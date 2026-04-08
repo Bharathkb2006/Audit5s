@@ -1664,18 +1664,19 @@ body.organogram-page-body {
 }
 
 .zone-detail-slide-inner {
-  max-width: 1200px;
+  /* Needs to fit: 220 (champ) + 900 (chart) + 220 (leader) + gaps */
+  max-width: 1420px;
   margin: 0 auto;
   padding: 10px 14px 12px;
 }
 
 .zone-header-row {
-  display: flex;
+  display: grid;
   grid-template-columns: 220px minmax(0, 1fr) 220px;
-  gap: 60px;
+  gap: 24px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 }
 
 .zone-person-card {
@@ -1738,6 +1739,9 @@ body.organogram-page-body {
 
 .zone-title-wrap {
   text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
 }
 
 .zone-detail-title {
@@ -1749,21 +1753,16 @@ body.organogram-page-body {
 }
 
 .zone-chart-wrap {
-  width: 100%;
-  max-width: 1050px;
+  width: min(900px, 100%);
+  max-width: 900px;
   /* Ensure the chart has enough space and never overlaps the table */
   height: 260px;
-  margin: 0 auto 10px;
+  margin: 0 auto;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0px;
   position: relative;
-}
-
-/* Hide Worst Zone navigation entry (frontend cleanup) */
-a[href="worstzone.html"] {
-  display: none !important;
 }
 
 /* Make the chart canvas strictly follow the container box */

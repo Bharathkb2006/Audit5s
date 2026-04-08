@@ -16,6 +16,33 @@ import { uploadPublicFile } from '../lib/firebase/storageUpload';
 const AppContext = createContext(null);
 
 const ADMIN_SESSION_KEY = 'bi_admin_authed_v1';
+const ZONES_CACHE_KEY = 'bi_zones_cache_v1';
+
+function safeJsonParse(raw, fallback) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function loadZonesCache() {
+  try {
+    const raw = localStorage.getItem(ZONES_CACHE_KEY);
+    const parsed = raw ? safeJsonParse(raw, null) : null;
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveZonesCache(next) {
+  try {
+    localStorage.setItem(ZONES_CACHE_KEY, JSON.stringify(next || { zones: {} }));
+  } catch {
+    /* ignore */
+  }
+}
 
 let zoneChannel = null;
 try {
@@ -27,7 +54,7 @@ try {
 export function AppProvider({ children }) {
   const [siteContent, setSiteContentState] = useState(() => defaultSiteContent());
 
-  const [zonesData, setZonesDataState] = useState(() => ({ zones: {} }));
+  const [zonesData, setZonesDataState] = useState(() => loadZonesCache() || { zones: {} });
 
   const [fppData, setFppDataState] = useState(() => defaultFppContent());
 
@@ -48,7 +75,11 @@ export function AppProvider({ children }) {
 
   const persistZones = useCallback((next) => {
     setZonesDataState(next);
-    saveZonesDoc(next).catch(() => {});
+    saveZonesCache(next);
+    saveZonesDoc(next).catch((e) => {
+      // Don't silently fail in production; this is what causes "reset to 0/25 after refresh".
+      console.error('Failed to save zones data to Firestore.', e);
+    });
   }, []);
 
   const persistFpp = useCallback((next) => {
@@ -162,17 +193,17 @@ export function AppProvider({ children }) {
 
 function useFirestoreSubscriptions(setSite, setZones, setFpp) {
   React.useEffect(() => {
-    const noop = () => {};
     const unsubs = [
       subscribeSiteContent((payload) => {
         setSite(payload);
-      }, noop),
+      }, (e) => console.error('Failed to subscribe site content.', e)),
       subscribeZonesData((payload) => {
         setZones(payload);
-      }, noop),
+        saveZonesCache(payload);
+      }, (e) => console.error('Failed to subscribe zones data.', e)),
       subscribeFppData((payload) => {
         setFpp(payload);
-      }, noop),
+      }, (e) => console.error('Failed to subscribe FPP data.', e)),
     ];
     return () => unsubs.forEach((u) => u());
   }, [setSite, setZones, setFpp]);
