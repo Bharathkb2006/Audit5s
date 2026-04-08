@@ -1664,7 +1664,8 @@ body.organogram-page-body {
 }
 
 .zone-detail-slide-inner {
-  max-width: 1200px;
+  /* Needs to fit: 220 (champ) + 900 (chart) + 220 (leader) + gaps */
+  max-width: 1420px;
   margin: 0 auto;
   padding: 10px 14px 12px;
 }
