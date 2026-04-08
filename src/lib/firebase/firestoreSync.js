@@ -28,7 +28,12 @@ export function subscribeZonesData(onData, onError) {
   return onSnapshot(
     r,
     (snap) => {
-      if (!snap.exists()) return;
+      if (!snap.exists()) {
+        // Ensure the document exists so the app doesn't look "reset" after deploy.
+        // (First admin save would create it too, but this makes initial load deterministic.)
+        setDoc(r, { payload: { zones: {} }, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+        return;
+      }
       const d = snap.data();
       if (d && typeof d.payload === 'object') onData(d.payload);
     },

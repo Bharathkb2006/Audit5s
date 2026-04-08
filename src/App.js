@@ -30,7 +30,6 @@ export default function App() {
       <Route path="/5szones" element={<FiveSZonesPage />} />
       <Route path="/5szone-detail" element={<ZoneDetailPage />} />
       <Route path="/bestzone" element={<SummaryLikePage mode="best" backTo="/5szones" ariaBack="Back" titleAlt="Best Zone" />} />
-      <Route path="/worstzone" element={<SummaryLikePage mode="worst" backTo="/5szones" ariaBack="Back" titleAlt="Worst Zone" />} />
       <Route
         path="/barcutting-layout"
         element={

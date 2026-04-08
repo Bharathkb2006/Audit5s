@@ -80,11 +80,6 @@ export default function SideMenu({ open, onClose, onNavigate }) {
                     Best Zone
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/worstzone" className={subClass} onClick={closeOnLink}>
-                    Worst Zone
-                  </NavLink>
-                </li>
               </SubMenuParent>
             </SubMenuParent>
           </ul>

@@ -9,6 +9,7 @@ export default function FiveSZonesPage() {
   }, []);
 
   const zones = Array.from({ length: 16 }, (_, i) => i + 1);
+  const zoneThumb = '/brakes india pagr.png';
 
   return (
     <SiteShell>
@@ -23,6 +24,17 @@ export default function FiveSZonesPage() {
                   Zone {z}
                 </Link>
               ))}
+            </div>
+            <div className="about-gallery-marquee" aria-label="Zone images marquee">
+              <div className="about-gallery-track">
+                {[0, 1].map((pass) => (
+                  <div key={pass} className="about-gallery-group about-gallery-group--zones">
+                    {zones.map((z) => (
+                      <img key={`${pass}-${z}`} className="zone-marquee-img" data-zone={z} src={zoneThumb} alt={`Zone ${z}`} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         </div>
