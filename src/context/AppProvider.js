@@ -12,6 +12,7 @@ import {
 } from '../lib/firebase/firestoreSync';
 import { applyFirebaseUrlToSiteContent, SITE_MEDIA_KEY_MAP } from '../lib/firebase/mediaKeyMap';
 import { uploadPublicFile } from '../lib/firebase/storageUpload';
+import { firebaseOptions } from '../lib/firebase/config';
 
 const AppContext = createContext(null);
 
@@ -58,6 +59,15 @@ export function AppProvider({ children }) {
 
   const [fppData, setFppDataState] = useState(() => defaultFppContent());
 
+  const [zonesSync, setZonesSync] = useState(() => ({
+    projectId: firebaseOptions()?.projectId || '',
+    lastSnapshotAt: 0,
+    lastSnapshotZones: 0,
+    lastSnapshotError: '',
+    lastSaveAt: 0,
+    lastSaveError: '',
+  }));
+
   const [adminAuthed, setAdminAuthed] = useState(() => {
     try {
       return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
@@ -66,7 +76,7 @@ export function AppProvider({ children }) {
     }
   });
 
-  useFirestoreSubscriptions(setSiteContentState, setZonesDataState, setFppDataState);
+  useFirestoreSubscriptions(setSiteContentState, setZonesDataState, setFppDataState, setZonesSync);
 
   const persistContent = useCallback((next) => {
     setSiteContentState(next);
@@ -76,9 +86,11 @@ export function AppProvider({ children }) {
   const persistZones = useCallback((next) => {
     setZonesDataState(next);
     saveZonesCache(next);
+    setZonesSync((s) => ({ ...s, lastSaveAt: Date.now(), lastSaveError: '' }));
     saveZonesDoc(next).catch((e) => {
       // Don't silently fail in production; this is what causes "reset to 0/25 after refresh".
       console.error('Failed to save zones data to Firestore.', e);
+      setZonesSync((s) => ({ ...s, lastSaveError: String(e?.message || e || 'Save failed') }));
     });
   }, []);
 
@@ -162,6 +174,7 @@ export function AppProvider({ children }) {
       patchSiteContent,
       zonesData,
       setZonesData: persistZones,
+      zonesSync,
       fppData,
       setFppData: persistFpp,
       adminAuthed,
@@ -177,6 +190,7 @@ export function AppProvider({ children }) {
       patchSiteContent,
       zonesData,
       persistZones,
+      zonesSync,
       fppData,
       persistFpp,
       adminAuthed,
@@ -191,7 +205,7 @@ export function AppProvider({ children }) {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
-function useFirestoreSubscriptions(setSite, setZones, setFpp) {
+function useFirestoreSubscriptions(setSite, setZones, setFpp, setZonesSync) {
   React.useEffect(() => {
     const unsubs = [
       subscribeSiteContent((payload) => {
@@ -200,7 +214,12 @@ function useFirestoreSubscriptions(setSite, setZones, setFpp) {
       subscribeZonesData((payload) => {
         setZones(payload);
         saveZonesCache(payload);
-      }, (e) => console.error('Failed to subscribe zones data.', e)),
+        const count = payload?.zones && typeof payload.zones === 'object' ? Object.keys(payload.zones).length : 0;
+        setZonesSync?.((s) => ({ ...s, lastSnapshotAt: Date.now(), lastSnapshotZones: count, lastSnapshotError: '' }));
+      }, (e) => {
+        console.error('Failed to subscribe zones data.', e);
+        setZonesSync?.((s) => ({ ...s, lastSnapshotError: String(e?.message || e || 'Subscribe failed') }));
+      }),
       subscribeFppData((payload) => {
         setFpp(payload);
       }, (e) => console.error('Failed to subscribe FPP data.', e)),

@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppProvider';
 import { defaultFppContent } from '../lib/defaults';
 import { uploadPublicFile } from '../lib/firebase/storageUpload';
+import { firebaseOptions } from '../lib/firebase/config';
 import AdminZonePanel from '../admin/AdminZonePanel';
 
 const MEDIA_KEYS = [
@@ -22,7 +23,7 @@ const MEDIA_KEYS = [
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { adminAuthed, logoutAdmin, putBiMedia, clearAllMediaStorage, fppData, setFppData } = useApp();
+  const { adminAuthed, logoutAdmin, putBiMedia, clearAllMediaStorage, fppData, setFppData, zonesSync } = useApp();
 
   const [pendingMedia, setPendingMedia] = useState({});
   const [mediaStatus, setMediaStatus] = useState('');
@@ -251,6 +252,7 @@ export default function AdminDashboard() {
   }
 
   const fpp = fppData?.fpp || { rows: [] };
+  const fb = firebaseOptions();
 
   return (
     <div className="admin-page-body">
@@ -282,6 +284,38 @@ export default function AdminDashboard() {
         </div>
       </header>
       <main className="admin-dashboard">
+        <section className="admin-section">
+          <h2>Firebase / Zones Sync Status</h2>
+          <p className="admin-note">
+            If zone scores reset on refresh or don’t show on other devices, check the status below for Firestore errors.
+          </p>
+          <div className="admin-form">
+            <div className="admin-note" style={{ marginBottom: 0 }}>
+              <div>
+                <strong>Firebase projectId:</strong> {fb?.projectId || '(missing)'}
+              </div>
+              <div>
+                <strong>Zones last loaded:</strong>{' '}
+                {zonesSync?.lastSnapshotAt ? new Date(zonesSync.lastSnapshotAt).toLocaleString() : 'not yet'}
+                {'  '}(<strong>{zonesSync?.lastSnapshotZones ?? 0}</strong> zones)
+              </div>
+              <div>
+                <strong>Zones last save attempt:</strong>{' '}
+                {zonesSync?.lastSaveAt ? new Date(zonesSync.lastSaveAt).toLocaleString() : 'not yet'}
+              </div>
+              {zonesSync?.lastSnapshotError ? (
+                <div style={{ color: '#c0392b' }}>
+                  <strong>Zones read error:</strong> {zonesSync.lastSnapshotError}
+                </div>
+              ) : null}
+              {zonesSync?.lastSaveError ? (
+                <div style={{ color: '#c0392b' }}>
+                  <strong>Zones write error:</strong> {zonesSync.lastSaveError}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
         <section className="admin-section">
           <h2>About 5S / 1S–5S (Media)</h2>
           <p className="admin-note">Choose media files (1920×1080 recommended). Videos play autoplay+loop on the pages.</p>
