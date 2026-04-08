@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { firebaseOptions, isFirebaseConfigured } from './config';
@@ -8,6 +8,7 @@ let _app;
 let _db;
 let _storage;
 let _auth;
+let _dbPersistenceInit = false;
 
 export function getFirebaseApp() {
   if (!isFirebaseConfigured()) return null;
@@ -20,6 +21,12 @@ export function getFirebaseApp() {
 export function getFirebaseDb() {
   if (!getFirebaseApp()) return null;
   if (!_db) _db = getFirestore(getFirebaseApp());
+  if (_db && !_dbPersistenceInit) {
+    _dbPersistenceInit = true;
+    enableIndexedDbPersistence(_db).catch(() => {
+      // ignore (multi-tab or unsupported)
+    });
+  }
   return _db;
 }
 
