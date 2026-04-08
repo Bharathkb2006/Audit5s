@@ -1,15 +1,20 @@
-/**
- * Fixed Firebase config for this project.
- * Intentionally avoids env overrides to prevent Vercel bucket/project mismatch.
- */
-const FIREBASE_FIXED = {
-  apiKey: 'AIzaSyBaGp7iu6vD7HHbed-q9kNZ_QONC1L8mEk',
-  authDomain: 'sauddit.firebaseapp.com',
-  projectId: 'sauddit',
-  storageBucket: 'sauddit.firebasestorage.app',
-  messagingSenderId: '912653801013',
-  appId: '1:912653801013:web:5b17bc6b013d76cf5f837c',
-};
+function readEnv(primaryKey, fallbackKey) {
+  const primary = import.meta.env[primaryKey];
+  if (typeof primary === 'string' && primary.trim()) return primary.trim();
+  const fallback = import.meta.env[fallbackKey];
+  if (typeof fallback === 'string' && fallback.trim()) return fallback.trim();
+  return '';
+}
+
+function normalizeStorageBucket(bucket) {
+  const value = String(bucket || '').trim();
+  if (!value) return '';
+  // For web SDK uploads, appspot.com bucket naming is the most reliable across projects.
+  if (value.endsWith('.firebasestorage.app')) {
+    return `${value.replace(/\.firebasestorage\.app$/, '')}.appspot.com`;
+  }
+  return value;
+}
 
 export function isFirebaseConfigured() {
   const opts = firebaseOptions();
@@ -28,12 +33,26 @@ export function isFirebaseAuthEnabled() {
 }
 
 export function firebaseOptions() {
-  const measurementId =
-    typeof import.meta.env.VITE_FIREBASE_MEASUREMENT_ID === 'string'
-      ? import.meta.env.VITE_FIREBASE_MEASUREMENT_ID.trim()
-      : '';
+  const measurementId = readEnv('VITE_FIREBASE_MEASUREMENT_ID', 'REACT_APP_FIREBASE_MEASUREMENT_ID');
+  const apiKey = readEnv('VITE_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_API_KEY');
+  const authDomain = readEnv('VITE_FIREBASE_AUTH_DOMAIN', 'REACT_APP_FIREBASE_AUTH_DOMAIN');
+  const projectId = readEnv('VITE_FIREBASE_PROJECT_ID', 'REACT_APP_FIREBASE_PROJECT_ID');
+  const storageBucket = normalizeStorageBucket(
+    readEnv('VITE_FIREBASE_STORAGE_BUCKET', 'REACT_APP_FIREBASE_STORAGE_BUCKET')
+  );
+  const messagingSenderId = readEnv(
+    'VITE_FIREBASE_MESSAGING_SENDER_ID',
+    'REACT_APP_FIREBASE_MESSAGING_SENDER_ID'
+  );
+  const appId = readEnv('VITE_FIREBASE_APP_ID', 'REACT_APP_FIREBASE_APP_ID');
+
   return {
-    ...FIREBASE_FIXED,
+    apiKey,
+    authDomain,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
     ...(measurementId ? { measurementId } : {}),
   };
 }

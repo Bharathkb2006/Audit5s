@@ -19,7 +19,7 @@ function Root() {
     return <FirebaseBootstrap kind="missingFirebase" />;
   }
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AppProvider>
         <App />
       </AppProvider>
