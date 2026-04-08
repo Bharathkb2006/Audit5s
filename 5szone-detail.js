@@ -349,6 +349,8 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          // Keep canvas internal resolution aligned with CSS pixels (strict 900px canvas expectation).
+          devicePixelRatio: 1,
           plugins: {
             legend: { display: false },
             tooltip: {

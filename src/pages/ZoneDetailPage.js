@@ -105,6 +105,9 @@ export default function ZoneDetailPage() {
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      // Keep canvas internal resolution aligned with CSS pixels (so devtools doesn't show "1125" etc).
+      // This matches the reference expectation of a strict 900px-wide canvas.
+      devicePixelRatio: 1,
       plugins: {
         legend: { display: false },
         tooltip: {
